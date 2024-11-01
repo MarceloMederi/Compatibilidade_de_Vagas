@@ -13,7 +13,30 @@ A Compatibilidade_de_Vagas é uma aplicação que permite analisar currículos e
 ## Estrutura do Projeto
 
 ```plaintext
-Bot-Triagem/ ├── backend/ │ ├── uploads/ # Pasta para armazenar currículos enviados │ ├── routes/ │ │ └── analyze.js # Rota para análise de currículos │ ├── services/ │ │ └── resumeAnalyzer.js # Lógica de análise (processamento de PDF e descrição) │ ├── server.js # Configuração do servidor Express │ ├── package.json # Dependências e scripts do projeto │ ├── package-lock.json # Arquivo de bloqueio de dependências └── frontend/ ├── node_modules/ ├── public/ │ └── index.html └── src/ ├── assets/ ├── components/ │ └── TriageForm.jsx ├── App.css ├── App.jsx ├── index.css └── main.jsx
+├── backend/ 
+│   ├── uploads/ # Pasta para armazenar currículos enviados 
+│   ├── routes/
+│   ├── services/
+│   ├── server.js # Configuração do servidor Express 
+│   ├── package.json # Dependências e scripts do projeto 
+│   └── package-lock.json # Arquivo de bloqueio de dependências 
+├── frontend/ 
+│   ├── node_modules/ 
+│   ├── public/ 
+│   ├── index.html 
+│   └── src/
+│   │   ├── assets/ 
+│   │   ├── components/ 
+│   │   │   └── TriageForm.jsx 
+│   │   ├── App.css 
+│   │   ├── App.jsx 
+│   │   ├── index.css 
+│   │   └── main.jsx
+│   ├── gitignore
+|   ├── eslint.config.js
+|   ├── package-lock.json
+|   └── vite.config.js
+└── README.md
 ```
 
 ## Pré-requisitos
