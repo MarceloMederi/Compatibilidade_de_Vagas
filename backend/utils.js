@@ -1,48 +1,38 @@
-// backend/utils.js
+const pdfParse = require('pdf-parse');
+const fs = require('fs');
 
-const natural = require('natural');
+const calculateCompatibility = async (file, jobDescription) => {
+    // Ler o arquivo PDF como um buffer
+    const dataBuffer = fs.readFileSync(file.path);
 
-// Função para calcular a compatibilidade usando Similaridade de Cosseno com TF-IDF
-const calculateCompatibility = (resumeText, jobDescriptionText) => {
-    const tokenizer = new natural.WordTokenizer();
+    try {
+        // Analisar o PDF e extrair texto
+        const data = await pdfParse(dataBuffer);
+        const resumeText = data.text.toLowerCase();
 
-    // Tokenização das palavras
-    const resumeWords = tokenizer.tokenize(resumeText);
-    const jobDescriptionWords = tokenizer.tokenize(jobDescriptionText);
+        // Processar a descrição da vaga
+        const jobDescriptionWords = jobDescription.toLowerCase().split(/\s+/);
+        const totalWords = jobDescriptionWords.length;
+        let matchedWords = 0;
 
-    // Remoção de stopwords (palavras comuns que não agregam significado)
-    const stopWords = natural.stopwords;
-    const resumeFiltered = resumeWords.filter(word => !stopWords.includes(word));
-    const jobDescriptionFiltered = jobDescriptionWords.filter(word => !stopWords.includes(word));
-
-    // Construção do vocabulário
-    const vocabulary = Array.from(new Set([...resumeFiltered, ...jobDescriptionFiltered]));
-
-    // Criação de vetores TF
-    const tf = (words) => {
-        const termFrequency = {};
-        words.forEach(word => {
-            termFrequency[word] = (termFrequency[word] || 0) + 1;
+        // Contar as palavras que aparecem no currículo
+        jobDescriptionWords.forEach(word => {
+            if (resumeText.includes(word)) {
+                matchedWords++;
+            }
         });
-        return vocabulary.map(word => termFrequency[word] || 0);
-    };
 
-    const tfResume = tf(resumeFiltered);
-    const tfJobDescription = tf(jobDescriptionFiltered);
+        // Calcular a compatibilidade
+        const compatibility = (matchedWords / totalWords) * 100;
 
-    // Cálculo da similaridade de cosseno
-    const similarity = cosineSimilarity(tfResume, tfJobDescription);
-    return similarity * 100; // Convertendo para porcentagem
+        // Formatar a porcentagem com duas casas decimais
+        const formattedCompatibility = compatibility.toFixed(2).replace('.', ','); // Aqui formatamos a porcentagem
+
+        return formattedCompatibility; // Retorna a porcentagem formatada
+    } catch (error) {
+        console.error('Erro ao processar o PDF:', error);
+        throw error;
+    }
 };
 
-// Função para calcular a similaridade de cosseno entre dois vetores
-const cosineSimilarity = (vecA, vecB) => {
-    const dotProduct = vecA.reduce((sum, a, idx) => sum + a * vecB[idx], 0);
-    const magnitudeA = Math.sqrt(vecA.reduce((sum, a) => sum + a * a, 0));
-    const magnitudeB = Math.sqrt(vecB.reduce((sum, b) => sum + b * b, 0));
-    if (magnitudeA === 0 || magnitudeB === 0) return 0;
-    return dotProduct / (magnitudeA * magnitudeB);
-};
-
-// Exporta as funções
-module.exports = { calculateCompatibility, cosineSimilarity };
+module.exports = { calculateCompatibility };

@@ -3,13 +3,13 @@
 import React, { useState } from 'react';
 
 const TriageForm = () => {
-    const [file, setFile] = useState(null);
+    const [files, setFiles] = useState([]); // Mude de um único arquivo para um array
     const [jobDescription, setJobDescription] = useState('');
     const [results, setResults] = useState(null);
     const [error, setError] = useState(null);
 
     const handleFileChange = (event) => {
-        setFile(event.target.files[0]);
+        setFiles(Array.from(event.target.files)); // Armazena todos os arquivos selecionados
     };
 
     const handleDescriptionChange = (event) => {
@@ -19,13 +19,15 @@ const TriageForm = () => {
     const handleSubmit = async (event) => {
         event.preventDefault(); // Impede o envio padrão do formulário
 
-        if (!file || !jobDescription) {
-            setError('Por favor, selecione um currículo e insira a descrição da vaga.');
+        if (files.length === 0 || !jobDescription) {
+            setError('Por favor, selecione pelo menos um currículo e insira a descrição da vaga.');
             return;
         }
 
         const formData = new FormData();
-        formData.append('file', file);
+        files.forEach(file => {
+            formData.append('files', file); // Adiciona todos os arquivos ao FormData
+        });
         formData.append('jobDescription', jobDescription);
 
         try {
@@ -53,11 +55,12 @@ const TriageForm = () => {
         <div>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="file">Selecionar currículo (PDF):</label>
+                    <label htmlFor="files">Selecionar currículos (PDFs):</label>
                     <input
                         type="file"
-                        id="file"
+                        id="files"
                         accept=".pdf"
+                        multiple // Permite seleção de múltiplos arquivos
                         onChange={handleFileChange}
                         required
                     />
@@ -85,8 +88,12 @@ const TriageForm = () => {
             {results && (
                 <div style={{ marginTop: '20px' }}>
                     <h2>Resultados da Análise</h2>
-                    <p>{results.message}</p>
-                    <p>Compatibilidade com a descrição da vaga: {results.job_description_compatibility}%</p>
+                    {results.results.map((result, index) => (
+                        <div key={index}>
+                            <p><strong>Arquivo:</strong> {result.fileName}</p>
+                            <p>Compatibilidade com a descrição da vaga: {result.job_description_compatibility}%</p>
+                        </div>
+                    ))}
                 </div>
             )}
         </div>
