@@ -30,24 +30,20 @@ const TriageForm = () => {
         });
         formData.append('jobDescription', jobDescription);
 
+        const response = await fetch('http://localhost:5000/api/upload', {
+            method: 'POST',
+            body: formData,
+        });
+
         try {
-            const response = await fetch('http://localhost:5000/api/upload', {
-                method: 'POST',
-                body: formData,
-            });
-
+            const data = await response.json();
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Erro desconhecido');
+                throw new Error(data.error || 'Erro desconhecido');
             }
-
-            const result = await response.json();
-            setResults(result);
-            setError(null);
+            setResults(data);
         } catch (error) {
-            console.error('Erro ao enviar o formulário:', error);
-            setError(error.message);
-            setResults(null);
+            setError('Erro no envio ou resposta inválida do servidor');
+            console.error('Erro:', error);
         }
     };
 
