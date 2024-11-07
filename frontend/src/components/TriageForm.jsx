@@ -7,9 +7,18 @@ const TriageForm = () => {
     const [jobDescription, setJobDescription] = useState('');
     const [results, setResults] = useState(null);
     const [error, setError] = useState(null);
+    const [isSubmitButtonVisible, setIsSubmitButtonVisible] = useState(true); // Estado para controlar a visibilidade do botão
 
     const handleFileChange = (event) => {
-        setFiles(Array.from(event.target.files)); // Armazena todos os arquivos selecionados
+        const selectedFiles = Array.from(event.target.files); // Armazena todos os arquivos selecionados
+        setFiles(selectedFiles);
+        
+        // Verifica se o número de arquivos excede 10 e esconde o botão de envio
+        if (selectedFiles.length > 10) {
+            setIsSubmitButtonVisible(false);
+        } else {
+            setIsSubmitButtonVisible(true);
+        }
     };
 
     const handleDescriptionChange = (event) => {
@@ -34,7 +43,7 @@ const TriageForm = () => {
             method: 'POST',
             body: formData,
         });
-
+        
         try {
             const data = await response.json();
             if (!response.ok) {
@@ -51,6 +60,7 @@ const TriageForm = () => {
         <div>
             <form onSubmit={handleSubmit}>
                 <div>
+                    <p>Favor selecione ate 10 arquivos PDF para analise</p>
                     <label htmlFor="files">Selecionar currículos (PDFs):</label>
                     <input
                         type="file"
@@ -72,7 +82,10 @@ const TriageForm = () => {
                         placeholder="Insira a descrição da vaga aqui..."
                     />
                 </div>
-                <button type="submit">Enviar</button>
+                
+                {isSubmitButtonVisible && ( // Condicional para exibir o botão com base na quantidade de arquivos
+                    <button type="submit">Enviar</button>
+                )}
             </form>
 
             {error && (
