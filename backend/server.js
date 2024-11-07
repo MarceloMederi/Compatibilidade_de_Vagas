@@ -5,23 +5,30 @@ const multer = require('multer');
 const pdfParse = require('pdf-parse');
 const cors = require('cors');
 const fs = require('fs');
+const path = require('path');
 const { calculateCompatibility } = require('./utils');
 
 const app = express();
 const port = 5000;
 
-// Middleware para habilitar CORS
 app.use(cors());
+app.use(express.json());
 
-// Configuração do multer para armazenar arquivos na pasta 'uploads' e permitir múltiplos arquivos
-const upload = multer({ dest: 'uploads/' }).array('files', 10); // Limite de até 10 arquivos
+const upload = multer({
+    dest: 'uploads/',
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype === 'application/pdf') {
+            cb(null, true);
+        } else {
+            cb(new Error('Apenas arquivos PDF são permitidos!'), false);
+        }
+    }
+}).array('files', 10);
 
-// Rota de teste
 app.get('/', (req, res) => {
     res.send('Bem-vindo ao servidor Node.js de análise de currículos!');
 });
 
-// Rota para upload e análise de currículos
 app.post('/api/upload', upload, async (req, res) => {
     try {
         if (!req.files || req.files.length === 0) {
@@ -29,27 +36,40 @@ app.post('/api/upload', upload, async (req, res) => {
         }
 
         const jobDescription = req.body.jobDescription;
+        if (!jobDescription) {
+            return res.status(400).json({ error: 'A descrição da vaga é obrigatória' });
+        }
 
         const results = await Promise.all(
             req.files.map(async (file) => {
-                // Aqui chamamos a função de análise para cada arquivo individualmente
-                const compatibility = await calculateCompatibility(file, jobDescription);
+                try {
+                    const compatibility = await calculateCompatibility(file, jobDescription);
 
-                return {
-                    fileName: file.originalname,
-                    job_description_compatibility: compatibility,
-                };
+                    fs.unlink(path.join(__dirname, 'uploads', file.filename), (err) => {
+                        if (err) console.error('Erro ao excluir o arquivo:', err);
+                    });
+
+                    return {
+                        fileName: file.originalname,
+                        job_description_compatibility: compatibility,
+                    };
+                } catch (err) {
+                    console.error(`Erro ao analisar o arquivo ${file.originalname}:`, err);
+                    return {
+                        fileName: file.originalname,
+                        error: `Erro ao analisar o arquivo ${file.originalname}`
+                    };
+                }
             })
         );
 
-        res.json({ results }); // Retorna os resultados em JSON
+        res.json({ results });
     } catch (error) {
         console.error('Erro ao processar o upload:', error);
         res.status(500).json({ error: 'Erro interno do servidor' });
     }
 });
 
-// Inicia o servidor
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
 });
