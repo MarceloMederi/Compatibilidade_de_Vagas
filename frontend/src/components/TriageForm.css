@@ -1,0 +1,109 @@
+/* TriageForm.css */
+
+/* Container geral do formulário */
+form {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Títulos e parágrafos dentro do formulário */
+form p {
+    font-size: 1rem;
+    color: #333;
+}
+
+form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* Estilo do input de arquivos */
+input[type="file"] {
+    display: block;
+    margin-top: 8px;
+    margin-bottom: 16px;
+}
+
+/* Caixa de texto (textarea) */
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+/* Lista de arquivos selecionados */
+.file-names {
+    margin-top: 16px;
+}
+
+.file-names ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.file-names li {
+    background-color: #e2e2e2;
+    padding: 8px;
+    margin-bottom: 4px;
+    border-radius: 4px;
+}
+
+/* Estilo do botão de envio */
+button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 16px;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Estilo de mensagens de erro */
+div[style="color: red;"] {
+    margin-top: 20px;
+    font-size: 1rem;
+    color: red;
+}
+
+/* Container de resultados */
+.results-container {
+    margin-top: 20px;
+    background-color: #e7f4e7;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center; /* Centraliza o texto dentro do container */
+}
+
+.results-container h2 {
+    margin-top: 0;
+}
+
+.result-item {
+    margin-bottom: 16px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.result-item p {
+    margin: 4px 0;
+}

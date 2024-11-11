@@ -1,9 +1,9 @@
-// frontend/src/components/TriageForm.jsx
-
 import React, { useState } from 'react';
+import './TriageForm.css';
 
 const TriageForm = () => {
     const [files, setFiles] = useState([]); // Mude de um único arquivo para um array
+    const [fileNames, setFileNames] = useState([]); // Novo estado para armazenar os nomes dos arquivos
     const [jobDescription, setJobDescription] = useState('');
     const [results, setResults] = useState(null);
     const [error, setError] = useState(null);
@@ -12,7 +12,11 @@ const TriageForm = () => {
     const handleFileChange = (event) => {
         const selectedFiles = Array.from(event.target.files); // Armazena todos os arquivos selecionados
         setFiles(selectedFiles);
-        
+
+        // Atualiza os nomes dos arquivos selecionados
+        const names = selectedFiles.map(file => file.name);
+        setFileNames(names);
+
         // Verifica se o número de arquivos excede 10 e esconde o botão de envio
         if (selectedFiles.length > 10) {
             setIsSubmitButtonVisible(false);
@@ -70,6 +74,17 @@ const TriageForm = () => {
                         onChange={handleFileChange}
                         required
                     />
+                    {/* Exibe os nomes dos arquivos selecionados */}
+                    {fileNames.length > 0 && (
+                        <div className="file-names">
+                            <p><strong>Arquivos Selecionados:</strong></p>
+                            <ul>
+                                {fileNames.map((fileName, index) => (
+                                    <li key={index}>{fileName}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
                 </div>
                 <div>
                     <label htmlFor="jobDescription">Descrição da Vaga:</label>
@@ -95,10 +110,10 @@ const TriageForm = () => {
             )}
 
             {results && (
-                <div style={{ marginTop: '20px' }}>
+                <div className="results-container">
                     <h2>Resultados da Análise</h2>
                     {results.results.map((result, index) => (
-                        <div key={index}>
+                        <div key={index} className="result-item">
                             <p><strong>Arquivo:</strong> {result.fileName}</p>
                             <p>Compatibilidade com a descrição da vaga: {result.job_description_compatibility}%</p>
                         </div>
