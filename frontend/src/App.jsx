@@ -1,13 +1,13 @@
 import React from 'react';
 import TriageForm from './components/TriageForm';
-import Front_logo from '../public/logo/Front_logo.png'
-
+import Front_logo from '../public/logo/Front_logo.png';
+import './App.css';
 
 const App = () => {
   return (
-    <div>
-      <div>
-        <img src={Front_logo} alt="Arquivo da logo do projeto escrito 'RECRUITER.IA'"/>
+    <div className="app-container">
+      <div className="logo-container">
+        <img src={Front_logo} alt="Logo do projeto Recruiter.IA" />
       </div>
       <TriageForm />
     </div>

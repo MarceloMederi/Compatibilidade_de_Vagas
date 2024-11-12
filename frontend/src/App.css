@@ -1,0 +1,38 @@
+/* Centraliza o conteúdo da página e define a aparência do contêiner principal */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f4f4f9;
+}
+  
+.app-container {
+    text-align: center;
+    padding: 20px;
+    max-width: 800px; 
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+  
+/* Estilo da logo */
+.logo-container img {
+    width: 450px; /* Ajuste o tamanho conforme necessário */
+    margin: 20px 0;
+}
+  
+/* Ajusta o texto dentro do contêiner */
+.app-container p {
+    color: #333;
+    font-size: 1rem;
+}
+  
+/* Estilos para melhorar o formulário de triagem */
+form {
+    margin-top: 20px;
+}
+  
