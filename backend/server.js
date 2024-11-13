@@ -88,6 +88,11 @@ app.post('/api/upload', (req, res, next) => {
             b.job_description_compatibility - a.job_description_compatibility
         );
 
+        // Formatar as compatibilidades para duas casas decimais e substituir ponto por vírgula
+        sortedResults.forEach(result => {
+            result.job_description_compatibility = result.job_description_compatibility.toFixed(2).replace('.', ',');
+        });
+
         // Inclui os resultados com erro sem alterar a ordem
         const finalResults = sortedResults.concat(results.filter(result => result.error));
 
