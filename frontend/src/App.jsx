@@ -1,6 +1,6 @@
 import React from 'react';
 import TriageForm from './components/TriageForm';
-import Front_logo from '../public/logo/Front_logo.png';
+import Front_logo from '/logo/Front_logo.png';
 import './App.css';
 
 const App = () => {
