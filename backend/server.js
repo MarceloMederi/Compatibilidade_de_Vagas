@@ -2,7 +2,6 @@
 
 const express = require('express');
 const multer = require('multer');
-const pdfParse = require('pdf-parse');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
@@ -83,8 +82,17 @@ app.post('/api/upload', (req, res, next) => {
             })
         );
 
-        // Retorna os resultados para o cliente
-        res.json({ results });
+        // Filtra apenas resultados válidos e ordena do maior para o menor
+        const validResults = results.filter(result => !result.error);
+        const sortedResults = validResults.sort((a, b) => 
+            b.job_description_compatibility - a.job_description_compatibility
+        );
+
+        // Inclui os resultados com erro sem alterar a ordem
+        const finalResults = sortedResults.concat(results.filter(result => result.error));
+
+        // Retorna os resultados ordenados para o cliente
+        res.json({ results: finalResults });
     } catch (error) {
         // Caso ocorra um erro no servidor
         console.error('Erro ao processar o upload:', error);
