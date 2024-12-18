@@ -130,7 +130,7 @@ Contribuições são bem-vindas! Sinta-se à vontade para abrir um issue ou envi
 
 ## Licença
 
-Este projeto está licenciado sob a [MIT License](LICENSE).
+Este projeto está licenciado sob a [MIT License](LICENSE.txt).
 
 ## Contato
 
